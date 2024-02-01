@@ -1,0 +1,17 @@
+http://localhost {
+    reverse_proxy /addevent events_management:5000 {
+    }
+    reverse_proxy /deleteevent events_management:5000 {
+    }
+    reverse_proxy /events events_management:5000 {
+    }
+    reverse_proxy /reserveticket tickets_management:5000 {
+    }
+    reverse_proxy /deleteticket tickets_management:5000 {
+    }
+    reverse_proxy /searchtickets tickets_management:5000 {
+    }
+    reverse_proxy /tickets tickets_management:5000 {
+    }
+}
+

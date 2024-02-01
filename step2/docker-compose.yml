@@ -1,0 +1,73 @@
+version: "3.9"
+services:
+  consul:
+    image: consul:latest
+    ports:
+      - "8400:8400"
+      - "8500:8500"
+      - "8600:8600"
+      - "8600:8600/udp"
+    command: "agent -server -bootstrap-expect=1 -ui -client 0.0.0.0"
+
+  caddy:
+    image: caddy:2.4.3-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - events_management
+      - tickets_management
+    volumes:
+      - ./caddy/Caddyfile:/home/caddy/Caddyfile
+    command: "caddy run --config /home/caddy/Caddyfile"
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  events_management:
+    build: ./events_management
+    ports:
+      - "8001:5000"
+    volumes:
+      - ./data:/home/data
+    environment:
+      FLASK_DEBUG: True
+
+  tickets_management:
+    build: ./tickets_management
+    ports:
+      - "8002:5000"
+    volumes:
+      - ./data:/home/data
+    environment:
+      FLASK_DEBUG: True
+
+  micro1:
+    build: ./micro1
+    ports:
+      - "8003:5000"
+    volumes:
+      - ./data:/home/data
+    environment:
+      FLASK_DEBUG: True
+
+  micro2:
+    build: ./micro2
+    ports:
+      - "8004:5000"
+    volumes:
+      - ./data:/home/data
+    environment:
+      FLASK_DEBUG: True
+
+  micro3:
+    build: ./micro3
+    ports:
+      - "8005:5000"
+    volumes:
+      - ./data:/home/data
+    environment:
+      FLASK_DEBUG: True
